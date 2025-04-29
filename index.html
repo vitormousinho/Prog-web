@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recanto do Zé - Loja de Informática</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="top-header">
+                <div class="logo">
+                    <img src="img/logo.png" alt="Recanto do Zé Logo">
+                    <h1>Recanto do Zé</h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquise o seu produto" id="search-input">
+                    <button type="button" id="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="user-actions">
+                    <div class="user-menu">
+                        <a href="#" id="user-menu-toggle">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Olá, Entre ou<br>Cadastre-se</span>
+                        </a>
+                    </div>
+                    <div class="wishlist">
+                        <a href="#" id="wishlist-link">
+                            <i class="fas fa-heart"></i>
+                            <span class="counter">0</span>
+                        </a>
+                    </div>
+                    <div class="cart">
+                        <a href="#" id="cart-link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="counter">0</span>
+                        </a>
+                    </div>
+                    <div class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav>
+        <div class="container">
+            <div class="main-nav">
+                <div class="departments-btn" id="departments-toggle">
+                    <i class="fas fa-bars"></i>
+                    <span>DEPARTAMENTOS</span>
+                </div>
+                <div class="departments-menu" id="departments-menu">
+                    <ul>
+                        <li><a href="#">PC GAMER</a></li>
+                        <li><a href="#">KIT UPGRADE</a></li>
+                        <li><a href="#">HARDWARE</a></li>
+                        <li><a href="#">NOTEBOOKS</a></li>
+                        <li><a href="#">MONITORES</a></li>
+                        <li><a href="#">PERIFÉRICOS</a></li>
+                        <li><a href="#">CADEIRAS</a></li>
+                        <li><a href="#">REDES</a></li>
+                    </ul>
+                </div>
+                <ul class="main-menu">
+                    <li><a href="#">PROMOÇÕES</a></li>
+                    <li><a href="#">PC GAMER</a></li>
+                    <li><a href="#">KIT UPGRADE</a></li>
+                    <li><a href="#">HARDWARE</a></li>
+                    <li><a href="#">NOTEBOOKS</a></li>
+                    <li><a href="#">MONITORES</a></li>
+                    <li><a href="#">MONTE SEU PC</a></li>
+                    <li><a href="#">ATENDIMENTO</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div class="container">
+            <section class="banner">
+                <img src="img/banner.jpg" alt="Promoção" class="banner-img">
+            </section>
+            <section class="featured-section">
+                <h2 class="section-title">Produtos em Destaque</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <img src="img/product1.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">PC Gamer AMD Ryzen 5 5600G</h3>
+                        <p class="product-price">R$ 2.999,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="img/product2.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">Monitor Gamer 24" 144Hz</h3>
+                        <p class="product-price">R$ 1.299,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="img/product3.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">Placa de Vídeo RTX 3060 8GB</h3>
+                        <p class="product-price">R$ 2.499,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="img/product4.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">Notebook Gamer i5 11400F</h3>
+                        <p class="product-price">R$ 4.599,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                </div>
+            </section>
+            <section class="categories-section">
+                <h2 class="section-title">Categorias</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <h3 class="category-name">PCs Gamers</h3>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h3 class="category-name">Hardware</h3>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <h3 class="category-name">Notebooks</h3>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <h3 class="category-name">Monitores</h3>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <h3 class="category-name">Periféricos</h3>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-chair"></i>
+                        </div>
+                        <h3 class="category-name">Cadeiras</h3>
+                    </div>
+                </div>
+            </section>
+            <section class="promo-banners">
+                <div class="promo-banner">
+                    <img src="img/promo1.jpg" alt="Promoção Especial">
+                </div>
+                <div class="promo-banner">
+                    <img src="img/promo2.jpg" alt="Oferta Relâmpago">
+                </div>
+            </section>
+            <section class="featured-section">
+                <h2 class="section-title">Produtos Populares</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <img src="img/product5.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">Headset Gamer 7.1 RGB</h3>
+                        <p class="product-price">R$ 299,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="img/product6.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">SSD 1TB NVMe</h3>
+                        <p class="product-price">R$ 599,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="img/product7.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">Mouse Gamer 16000 DPI</h3>
+                        <p class="product-price">R$ 199,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="img/product8.jpg" alt="Produto" class="product-img">
+                        <h3 class="product-title">Teclado Mecânico RGB</h3>
+                        <p class="product-price">R$ 349,99</p>
+                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
+                    </div>
+                </div>
+            </section>
+            <section class="newsletter">
+                <h3>Inscreva-se em nossa Newsletter</h3>
+                <p>Receba ofertas exclusivas, novidades e dicas diretamente no seu e-mail.</p>
+                <form id="newsletter-form">
+                    <input type="email" placeholder="Seu melhor e-mail" required>
+                    <button type="submit">INSCREVER</button>
+                </form>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>Sobre nós</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Quem somos</a></li>
+                        <li><a href="#">Nossa história</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                        <li><a href="#">Trabalhe conosco</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Atendimento</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Central de Ajuda</a></li>
+                        <li><a href="#">Como comprar</a></li>
+                        <li><a href="#">Prazos de entrega</a></li>
+                        <li><a href="#">Formas de pagamento</a></li>
+                        <li><a href="#">Trocas e devoluções</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Minha conta</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Meus pedidos</a></li>
+                        <li><a href="#">Meus dados</a></li>
+                        <li><a href="#">Lista de desejos</a></li>
+                        <li><a href="#">Meus endereços</a></li>
+                        <li><a href="#">Meus favoritos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contato</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> (00) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> contato@recantodoze.com.br</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Av. Principal, 1000</li>
+                        <li><i class="fas fa-clock"></i> Seg-Sex: 9h às 18h</li>
+                    </ul>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Recanto do Zé. Todos os direitos reservados.</p>
+                <div class="payment-methods">
+                    <div class="payment-icon"></div>
+                    <div class="payment-icon"></div>
+                    <div class="payment-icon"></div>
+                    <div class="payment-icon"></div>
+                    <div class="payment-icon"></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript Link -->
+    <script src="js/script.js"></script>
+</body>
+</html>
