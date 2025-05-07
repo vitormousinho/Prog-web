@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <header class="login-header">
+        <div class="logo-container">
+            <a href="index.html" class="logo">
+                <img src="img/logo.png" alt="Logo da Loja">
+                <h1>Nome da Loja</h1>
+            </a>
+        </div>
+        <div class="register-link">
+            <span>Já tem uma conta?</span>
+            <button onclick="window.location.href='login.html'" class="register-btn">faça login</button>
+            <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="login-box">
+            <h2>Cadastro</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="input-group">
+                    <label for="confirmPassword">Confirmar Senha</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit">Cadastrar</button>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+    <script src="../js/config.js"></script>
+    <script src="../js/cadastro.js"></script>
+    <script>
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.contains('dark-theme');
+                setTheme(isDark ? 'light' : 'dark');
+            });
+        }
+    });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,8 @@
+# Ignorar chaves e credenciais
+js/config/serviceAccountKey.json
+
+# Ignorar a pasta node_modules
+node_modules/
+
+# Ignorar arquivos de log
+*.log
