@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recanto do Zé - Loja de Informática</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -23,26 +23,28 @@
                 </div>
                 <div class="user-actions">
                     <div class="user-menu">
-                        <a href="#" id="user-menu-toggle">
-                            <i class="fas fa-user-circle"></i>
-                            <span>Olá, Entre ou<br>Cadastre-se</span>
+                        <a href="login.html" class="user-link">
+                            <i class="fas fa-user"></i>
+                            <span>Entrar</span>
                         </a>
                     </div>
                     <div class="wishlist">
-                        <a href="#" id="wishlist-link">
+                        <a href="#">
                             <i class="fas fa-heart"></i>
-                            <span class="counter">0</span>
+                            <span>Favoritos</span>
                         </a>
+                        <span class="counter">0</span>
                     </div>
                     <div class="cart">
-                        <a href="#" id="cart-link">
+                        <a href="#">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="counter">0</span>
+                            <span>Carrinho</span>
                         </a>
+                        <span class="counter">0</span>
                     </div>
-                    <div class="theme-toggle" id="theme-toggle">
+                    <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
                         <i class="fas fa-sun"></i>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -191,6 +193,16 @@
                     </div>
                 </div>
             </section>
+            <section class="add-product-section">
+                <h2>Adicionar Produto</h2>
+                <form id="add-product-form">
+                    <input type="text" id="product-name" placeholder="Nome do Produto" required>
+                    <input type="number" id="product-price" placeholder="Preço" required>
+                    <textarea id="product-description" placeholder="Descrição"></textarea>
+                    <input type="text" id="product-photo" placeholder="URL da Foto">
+                    <button type="submit">Adicionar Produto</button>
+                </form>
+            </section>
             <section class="newsletter">
                 <h3>Inscreva-se em nossa Newsletter</h3>
                 <p>Receba ofertas exclusivas, novidades e dicas diretamente no seu e-mail.</p>
@@ -264,6 +276,32 @@
     </footer>
     
     <!-- JavaScript Link -->
-    <script src="js/script.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/userState.js"></script>
+    <script>
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function() {
+                const isDark = document.body.classList.contains('dark-theme');
+                setTheme(isDark ? 'light' : 'dark');
+            });
+        }
+    });
+    </script>
 </body>
 </html>

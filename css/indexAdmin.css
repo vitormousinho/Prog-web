@@ -1,0 +1,145 @@
+body {
+    font-family: Arial, sans-serif;
+    background: var(--bg-color, #f5f5f5);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color, #222);
+    transition: background 0.3s, color 0.3s;
+}
+:root {
+    --bg-color: #f5f5f5;
+    --header-bg: #222;
+    --header-text: #fff;
+    --card-bg: #fff;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --primary: #ff9800;
+    --success: #4caf50;
+    --text-color: #222;
+}
+body.dark-theme {
+    --bg-color: #181818;
+    --header-bg: #222;
+    --header-text: #fff;
+    --card-bg: #232323;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    --primary: #ff9800;
+    --success: #4caf50;
+    --text-color: #f5f5f5;
+}
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 16px 32px;
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+.logo img {
+    height: 40px;
+    margin-right: 12px;
+}
+.logo h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--header-text);
+}
+.search-bar {
+    flex: 1;
+    display: flex;
+    margin: 0 32px;
+    max-width: 400px;
+}
+.search-bar input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+.search-bar button {
+    padding: 8px 16px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+#createProductBtn {
+    background: var(--success);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.theme-toggle {
+    margin-left: 16px;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 1.3rem;
+    background: none;
+    border: none;
+}
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 32px;
+    justify-content: flex-start;
+}
+.product-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+    width: 240px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-color);
+}
+.product-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+}
+.product-info p {
+    margin: 0 0 8px 0;
+    color: #555;
+}
+body.dark-theme .product-info p {
+    color: #bbb;
+}
+.product-info span {
+    font-weight: bold;
+    color: var(--text-color);
+}
+.edit-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+.edit-btn:hover {
+    color: #e65100;
+}
+.user-menu {
+    margin-left: 16px;
+} 

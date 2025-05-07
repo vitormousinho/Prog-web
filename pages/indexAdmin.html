@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="../css/indexAdmin.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="logo-container">
+            <a href="indexAdmin.html" class="logo">
+                <img src="../img/logo.png" alt="Logo da Loja">
+                <h1>Nome da Loja</h1>
+            </a>
+        </div>
+        <form class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar produtos...">
+            <button type="submit">Buscar</button>
+        </form>
+        <div class="admin-actions">
+            <button id="createProductBtn">Criar Item</button>
+            <div class="user-menu"></div>
+            <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </header>
+    <main>
+        <section id="productsContainer" class="products-container">
+            <!-- Cards de produtos serão renderizados aqui -->
+        </section>
+    </main>
+    <script src="../js/config.js"></script>
+    <script src="../js/userState.js"></script>
+    <script src="../js/indexAdmin.js"></script>
+</body>
+</html> 
