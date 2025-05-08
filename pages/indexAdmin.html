@@ -3,35 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin</title>
+    <title>Painel Administrativo - Recanto do Zé</title>
     <link rel="stylesheet" href="../css/indexAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="admin-header">
-        <div class="logo-container">
-            <a href="indexAdmin.html" class="logo">
-                <img src="../img/logo.png" alt="Logo da Loja">
-                <h1>Nome da Loja</h1>
-            </a>
-        </div>
-        <form class="search-bar">
-            <input type="text" id="searchInput" placeholder="Buscar produtos...">
-            <button type="submit">Buscar</button>
-        </form>
-        <div class="admin-actions">
-            <button id="createProductBtn">Criar Item</button>
-            <div class="user-menu"></div>
-            <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
-                <i class="fas fa-sun"></i>
-            </button>
+    <header>
+        <div class="admin-header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../img/logo.png" alt="Recanto do Zé Logo">
+                    <h1>Painel Administrativo</h1>
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Pesquisar produtos..." id="search-input">
+                <button type="button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="admin-actions">
+                <div class="user-menu">
+                    <a href="#" class="user-link">
+                        <i class="fas fa-user"></i>
+                        <span id="user-name">Carregando...</span>
+                    </a>
+                    <div class="user-dropdown">
+                        <a href="#" id="logout-btn">Sair</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
         </div>
     </header>
+    <nav>
+        <div class="container">
+            <div class="main-nav">
+                <div class="departments-btn" id="departments-toggle">
+                    <i class="fas fa-bars"></i>
+                    <span>CATEGORIAS</span>
+                </div>
+                <div class="departments-menu" id="departments-menu">
+                    <ul>
+                        <li><a href="#" data-category="pc-gamer">PC GAMER</a></li>
+                        <li><a href="#" data-category="kit-upgrade">KIT UPGRADE</a></li>
+                        <li><a href="#" data-category="hardware">HARDWARE</a></li>
+                        <li><a href="#" data-category="notebooks">NOTEBOOKS</a></li>
+                        <li><a href="#" data-category="monitores">MONITORES</a></li>
+                        <li><a href="#" data-category="perifericos">PERIFÉRICOS</a></li>
+                        <li><a href="#" data-category="cadeiras">CADEIRAS</a></li>
+                        <li><a href="#" data-category="redes">REDES</a></li>
+                    </ul>
+                </div>
+                <ul class="main-menu">
+                    <li><a href="#" data-category="promocoes">PROMOÇÕES</a></li>
+                    <li><a href="#" data-category="pc-gamer">PC GAMER</a></li>
+                    <li><a href="#" data-category="kit-upgrade">KIT UPGRADE</a></li>
+                    <li><a href="#" data-category="hardware">HARDWARE</a></li>
+                    <li><a href="#" data-category="notebooks">NOTEBOOKS</a></li>
+                    <li><a href="#" data-category="monitores">MONITORES</a></li>
+                    <li><a href="#" data-category="perifericos">PERIFÉRICOS</a></li>
+                    <li><a href="#" data-category="cadeiras">CADEIRAS</a></li>
+                </ul>
+                <button id="createProductBtn" class="create-product-btn">
+                    <i class="fas fa-plus"></i>
+                    CADASTRAR PRODUTO
+                </button>
+            </div>
+        </div>
+    </nav>
     <main>
-        <section id="productsContainer" class="products-container">
-            <!-- Cards de produtos serão renderizados aqui -->
-        </section>
+        <div class="container">
+            <div class="products-container" id="products-container">
+                <!-- Os produtos serão carregados dinamicamente aqui -->
+            </div>
+        </div>
     </main>
-    <script src="../js/config.js"></script>
     <script src="../js/userState.js"></script>
     <script src="../js/indexAdmin.js"></script>
 </body>

@@ -96,4 +96,4 @@ document.addEventListener('DOMContentLoaded', () => {
             setTheme(isDark ? 'light' : 'dark');
         });
     }
-}); 
+});

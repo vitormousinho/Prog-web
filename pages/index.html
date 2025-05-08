@@ -12,7 +12,7 @@
         <div class="container">
             <div class="top-header">
                 <div class="logo">
-                    <img src="img/logo.png" alt="Recanto do Zé Logo">
+                    <img src="../img/logo.png" alt="Recanto do Zé Logo">
                     <h1>Recanto do Zé</h1>
                 </div>
                 <div class="search-bar">
@@ -276,32 +276,38 @@
     </footer>
     
     <!-- JavaScript Link -->
-    <script src="../js/config.js"></script>
-    <script src="../js/script.js"></script>
     <script src="../js/userState.js"></script>
+    <script src="../js/script.js"></script>
     <script>
-    function setTheme(theme) {
-        if (theme === 'dark') {
-            document.body.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
-            document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-moon"></i>';
-        } else {
-            document.body.classList.remove('dark-theme');
-            localStorage.setItem('theme', 'light');
-            document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
+        // Função para alternar o tema
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // Verifica se há um tema salvo
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+            
+            // Adiciona o evento de clique para alternar o tema
             themeToggle.addEventListener('click', function() {
-                const isDark = document.body.classList.contains('dark-theme');
-                setTheme(isDark ? 'light' : 'dark');
+                document.body.classList.toggle('dark-theme');
+                
+                // Atualiza o ícone
+                if (document.body.classList.contains('dark-theme')) {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'light');
+                }
             });
-        }
-    });
+        });
     </script>
 </body>
 </html>

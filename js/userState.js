@@ -1,6 +1,6 @@
 // Função para verificar se o usuário está logado
 function isUserLoggedIn() {
-    return localStorage.getItem('username') !== null;
+    return !!localStorage.getItem('token');
 }
 
 // Função para obter o nome do usuário logado
@@ -13,13 +13,39 @@ function isUserAdmin() {
     return localStorage.getItem('isAdmin') === 'true';
 }
 
+// Função para obter o token de autenticação
+function getAuthToken() {
+    return localStorage.getItem('token');
+}
+
 // Função para fazer logout
 function logout() {
+    // Limpa todos os dados do usuário
+    localStorage.removeItem('token');
     localStorage.removeItem('username');
-    localStorage.removeItem('password');
     localStorage.removeItem('isAdmin');
-    localStorage.removeItem('userId');
+    
+    // Redireciona para a página de login
     window.location.href = 'login.html';
+}
+
+// Função para verificar se o usuário tem permissão para acessar uma página
+function checkPageAccess() {
+    const currentPage = window.location.pathname;
+    
+    // Se não estiver logado e não estiver na página de login ou cadastro
+    if (!isUserLoggedIn() && !currentPage.includes('login.html') && !currentPage.includes('cadastro.html')) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    // Se estiver tentando acessar página de admin sem ser admin
+    if (currentPage.includes('admin') && !isUserAdmin()) {
+        window.location.href = 'index.html';
+        return false;
+    }
+    
+    return true;
 }
 
 // Função para atualizar a interface do usuário
@@ -28,22 +54,38 @@ function updateUserInterface() {
     if (!userMenu) return;
 
     if (isUserLoggedIn()) {
-        // Usuário está logado
         const username = getLoggedInUsername();
         const isAdmin = isUserAdmin();
         
         userMenu.innerHTML = `
-            <a href="#" class="user-link">
-                <i class="fas fa-user"></i>
-                <span>${username}</span>
-            </a>
-            <div class="user-dropdown">
-                ${isAdmin ? '<a href="admin.html">Painel Admin</a>' : ''}
-                <a href="#" onclick="logout()">Sair</a>
+            <div class="user-info">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i>
+                    <span>${username}</span>
+                </a>
+                <div class="user-dropdown">
+                    ${isAdmin ? '<a href="indexAdmin.html">Painel Admin</a>' : ''}
+                    <a href="#" onclick="logout()">Sair</a>
+                </div>
             </div>
         `;
+
+        // Adiciona evento de clique para mostrar/esconder dropdown
+        const userLink = userMenu.querySelector('.user-link');
+        const dropdown = userMenu.querySelector('.user-dropdown');
+        
+        userLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdown.classList.toggle('show');
+        });
+
+        // Fecha o dropdown quando clicar fora
+        document.addEventListener('click', (e) => {
+            if (!userMenu.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
     } else {
-        // Usuário não está logado
         userMenu.innerHTML = `
             <a href="login.html" class="user-link">
                 <i class="fas fa-user"></i>
@@ -53,5 +95,20 @@ function updateUserInterface() {
     }
 }
 
-// Atualiza a interface quando o documento carregar
-document.addEventListener('DOMContentLoaded', updateUserInterface);
+// Função para mostrar mensagens
+function showMessage(message, type = 'info') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 5000);
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    checkPageAccess();
+    updateUserInterface();
+});

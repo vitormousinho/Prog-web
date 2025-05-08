@@ -8,6 +8,9 @@
     --text-dark: #333333;
     --hover-primary: #083180;
     --hover-secondary: #d69b10;
+    --card-bg: #ffffff;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --transition-speed: 0.5s;
 }
 
 * {
@@ -17,6 +20,7 @@
     font-family: 'Arial', sans-serif;
 }
 
+/* Transições globais */
 body {
     background-color: var(--primary-color);
     min-height: 100vh;
@@ -24,6 +28,8 @@ body {
     flex-direction: column;
     color: var(--text-dark);
     line-height: 1.6;
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
 }
 
 /* Header Styles */
@@ -105,6 +111,8 @@ body {
     border-radius: 10px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     width: 100%;
+    transition: background-color var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease;
 }
 
 h2 {
@@ -113,6 +121,7 @@ h2 {
     margin-bottom: 30px;
     font-size: 24px;
     font-weight: bold;
+    transition: color var(--transition-speed) ease;
 }
 
 .input-group {
@@ -124,6 +133,7 @@ label {
     margin-bottom: 5px;
     color: var(--text-dark);
     font-weight: bold;
+    transition: color var(--transition-speed) ease;
 }
 
 input {
@@ -132,7 +142,7 @@ input {
     border: 1px solid var(--border-color);
     border-radius: 5px;
     font-size: 16px;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     background-color: var(--text-color);
 }
 
@@ -222,3 +232,27 @@ button[type="submit"]:hover {
         font-size: 14px;
     }
 } 
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 15px;
+    transition: transform var(--transition-speed) ease,
+                color var(--transition-speed) ease;
+}
+
+.theme-toggle:hover {
+    transform: rotate(30deg);
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+    --light-bg: #181818;
+    --card-bg: #232323;
+    --text-dark: #f5f5f5;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}

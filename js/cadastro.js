@@ -2,23 +2,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('registerForm');
     const messageDiv = document.getElementById('message');
 
+    // Verifica se já está logado
+    if (localStorage.getItem('token')) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const username = document.getElementById('username').value;
+        const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        // Validação básica
+        // Validações
+        if (!username || !password || !confirmPassword) {
+            showMessage('Por favor, preencha todos os campos', 'error');
+            return;
+        }
+
+        if (username.length < 3) {
+            showMessage('O nome de usuário deve ter pelo menos 3 caracteres', 'error');
+            return;
+        }
+
         if (password !== confirmPassword) {
-            messageDiv.textContent = 'As senhas não coincidem';
-            messageDiv.className = 'message error';
+            showMessage('As senhas não coincidem', 'error');
             return;
         }
 
         if (password.length < 6) {
-            messageDiv.textContent = 'A senha deve ter pelo menos 6 caracteres';
-            messageDiv.className = 'message error';
+            showMessage('A senha deve ter pelo menos 6 caracteres', 'error');
+            return;
+        }
+
+        // Validação de força da senha
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+            showMessage('A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais', 'error');
             return;
         }
 
@@ -30,29 +55,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     username,
-                    password,
-                    isAdmin: false
+                    password
                 })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                messageDiv.textContent = 'Cadastro realizado com sucesso!';
-                messageDiv.className = 'message success';
+                showMessage('Cadastro realizado com sucesso!', 'success');
                 
                 // Redireciona para a página de login após 2 segundos
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 2000);
             } else {
-                messageDiv.textContent = data.error || 'Erro ao realizar cadastro';
-                messageDiv.className = 'message error';
+                showMessage(data.error || 'Erro ao realizar cadastro', 'error');
             }
         } catch (error) {
             console.error('Erro:', error);
-            messageDiv.textContent = 'Erro ao conectar com o servidor';
-            messageDiv.className = 'message error';
+            showMessage('Erro ao conectar com o servidor', 'error');
         }
     });
+
+    // Função para mostrar mensagens
+    function showMessage(message, type) {
+        messageDiv.textContent = message;
+        messageDiv.className = `message ${type}`;
+        
+        // Limpa a mensagem após 5 segundos
+        setTimeout(() => {
+            messageDiv.textContent = '';
+            messageDiv.className = 'message';
+        }, 5000);
+    }
 }); 

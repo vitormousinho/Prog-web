@@ -3,13 +3,24 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const admin = require('firebase-admin');
-const serviceAccount = require('./config/serviceAccountKey.json');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// Validação das variáveis de ambiente
+if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_PRIVATE_KEY || !process.env.FIREBASE_CLIENT_EMAIL) {
+    console.error('Variáveis de ambiente do Firebase não configuradas');
+    process.exit(1);
+}
 
 // Inicialização do Firebase Admin com tratamento de erro
 try {
     admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://api-web-441f1-default-rtdb.firebaseio.com"
+        credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL
+        }),
+        databaseURL: process.env.FIREBASE_DATABASE_URL
     });
     console.log('Firebase Admin inicializado com sucesso');
 } catch (error) {
@@ -27,21 +38,25 @@ app.use(cors());
 
 // Middleware de autenticação
 async function authenticate(req, res, next) {
-    const { username, password } = req.headers;
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ error: 'Token não fornecido' });
+    }
+
     try {
-        const snapshot = await db.ref('users').once('value');
-        const users = snapshot.val();
-        const user = Object.values(users).find(
-            (u) => u.username === username && u.password === password
-        );
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const snapshot = await db.ref(`users/${decoded.uid}`).once('value');
+        const user = snapshot.val();
+        
         if (!user) {
-            return res.status(401).json({ error: 'Unauthorized' });
+            return res.status(401).json({ error: 'Usuário não encontrado' });
         }
+        
         req.user = user;
         next();
     } catch (error) {
         console.error('Erro na autenticação:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(401).json({ error: 'Token inválido' });
     }
 }
 
@@ -57,7 +72,11 @@ function authorizeAdmin(req, res, next) {
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-        return res.status(400).json({ error: 'Missing required fields' });
+        return res.status(400).json({ error: 'Campos obrigatórios ausentes' });
+    }
+
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'A senha deve ter pelo menos 6 caracteres' });
     }
 
     try {
@@ -66,21 +85,23 @@ app.post('/register', async (req, res) => {
         const userExists = Object.values(users).some(u => u.username === username);
         
         if (userExists) {
-            return res.status(400).json({ error: 'Username already exists' });
+            return res.status(400).json({ error: 'Nome de usuário já existe' });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = {
             username,
-            password,
-            isAdmin: false
+            password: hashedPassword,
+            isAdmin: false,
+            createdAt: admin.database.ServerValue.TIMESTAMP
         };
 
         const ref = db.ref('users').push();
         await ref.set(newUser);
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'Usuário registrado com sucesso' });
     } catch (error) {
         console.error('Erro no registro:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
 
@@ -90,16 +111,36 @@ app.post('/login', async (req, res) => {
     try {
         const snapshot = await db.ref('users').once('value');
         const users = snapshot.val();
-        const user = Object.values(users).find(
-            (u) => u.username === username && u.password === password
-        );
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+        const userEntry = Object.entries(users).find(([_, u]) => u.username === username);
+        
+        if (!userEntry) {
+            return res.status(401).json({ error: 'Credenciais inválidas' });
         }
-        res.json({ message: 'Login successful', user });
+
+        const [uid, user] = userEntry;
+        const validPassword = await bcrypt.compare(password, user.password);
+        
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Credenciais inválidas' });
+        }
+
+        const token = jwt.sign(
+            { uid, username: user.username, isAdmin: user.isAdmin },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        res.json({ 
+            message: 'Login realizado com sucesso',
+            token,
+            user: {
+                username: user.username,
+                isAdmin: user.isAdmin
+            }
+        });
     } catch (error) {
         console.error('Erro no login:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
 

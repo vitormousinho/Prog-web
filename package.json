@@ -1,20 +1,26 @@
 {
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "firebase-admin": "^13.3.0"
+    "firebase-admin": "^13.3.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "name": "prog-web",
   "version": "1.0.0",
-  "description": "",
-  "main": "API.js",
+  "description": "API REST com autenticação e autorização",
+  "main": "js/API.js",
   "scripts": {
+    "start": "node js/API.js",
+    "dev": "nodemon js/API.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
 }
