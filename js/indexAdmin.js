@@ -1,3 +1,5 @@
+const API_URL = 'http://localhost:3001';
+
 // Função para buscar e renderizar produtos
 async function fetchAndRenderProducts(query = '') {
     const container = document.getElementById('productsContainer');
@@ -50,12 +52,6 @@ if (searchForm) {
 
 // Evento para criar item
 const createBtn = document.getElementById('createProductBtn');
-if (createBtn) {
-    createBtn.addEventListener('click', () => {
-        // Aqui você pode abrir um modal ou redirecionar para uma página de criação
-        alert('Função de criar item ainda não implementada.');
-    });
-}
 
 // Evento para editar produto
 const container = document.getElementById('productsContainer');
@@ -82,6 +78,44 @@ function setTheme(theme) {
     }
 }
 
+// Função para mostrar o modal de criação de produto
+function showCreateProductModal() {
+    const modal = document.getElementById('createProductModal');
+    modal.style.display = 'block';
+}
+
+// Função para fechar o modal
+function closeCreateProductModal() {
+    const modal = document.getElementById('createProductModal');
+    modal.style.display = 'none';
+    document.getElementById('createProductForm').reset();
+}
+
+// Função para criar um novo produto
+async function createProduct(productData) {
+    try {
+        const response = await fetch(`${API_URL}/products`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(productData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao criar produto');
+        }
+
+        const newProduct = await response.json();
+        return newProduct;
+    } catch (error) {
+        console.error('Erro:', error);
+        throw error;
+    }
+}
+
+// Event Listeners para o modal
 document.addEventListener('DOMContentLoaded', () => {
     // Tema salvo
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -96,4 +130,33 @@ document.addEventListener('DOMContentLoaded', () => {
             setTheme(isDark ? 'light' : 'dark');
         });
     }
+
+    const createProductBtn = document.getElementById('createProductBtn');
+    const cancelCreateBtn = document.getElementById('cancelCreateBtn');
+    const createProductForm = document.getElementById('createProductForm');
+
+    createProductBtn.addEventListener('click', showCreateProductModal);
+    cancelCreateBtn.addEventListener('click', closeCreateProductModal);
+
+    createProductForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(createProductForm);
+        const productData = {
+            name: formData.get('name'),
+            description: formData.get('description'),
+            price: parseFloat(formData.get('price')),
+            photo: formData.get('photo')
+        };
+
+        try {
+            await createProduct(productData);
+            closeCreateProductModal();
+            fetchAndRenderProducts();
+            alert('Produto criado com sucesso!');
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao criar produto. Por favor, tente novamente.');
+        }
+    });
 });

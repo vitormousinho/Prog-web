@@ -56,7 +56,19 @@ function updateUserInterface() {
     if (isUserLoggedIn()) {
         const username = getLoggedInUsername();
         const isAdmin = isUserAdmin();
-        
+        const currentPage = window.location.pathname;
+
+        let adminPanelLink = '';
+        if (isAdmin) {
+            if (currentPage.includes('indexAdmin.html')) {
+                // Está no painel admin, mostra "Painel do Usuário"
+                adminPanelLink = `<a href="index.html" id="switch-panel-link">Painel do Usuário</a>`;
+            } else if (currentPage.includes('index.html')) {
+                // Está no painel usuário, mostra "Painel Admin"
+                adminPanelLink = `<a href="indexAdmin.html" id="switch-panel-link">Painel Admin</a>`;
+            }
+        }
+
         userMenu.innerHTML = `
             <div class="user-info">
                 <a href="#" class="user-link">
@@ -64,7 +76,7 @@ function updateUserInterface() {
                     <span>${username}</span>
                 </a>
                 <div class="user-dropdown">
-                    ${isAdmin ? '<a href="indexAdmin.html">Painel Admin</a>' : ''}
+                    ${adminPanelLink}
                     <a href="#" onclick="logout()">Sair</a>
                 </div>
             </div>
