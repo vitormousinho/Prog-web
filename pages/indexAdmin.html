@@ -76,7 +76,11 @@
     </nav>
     <main>
         <div class="container">
-            <div class="products-container" id="products-container">
+            <div class="admin-products-title">
+                <h2>Produtos</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="products-container" id="productsContainer">
                 <!-- Os produtos serão carregados dinamicamente aqui -->
             </div>
         </div>
@@ -108,6 +112,48 @@
                     <button type="submit" class="submit-btn">Criar Produto</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Produto -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content">
+            <h2>Editar Produto</h2>
+            <form id="editProductForm">
+                <div class="form-group">
+                    <label for="editProductName">Nome do Produto:</label>
+                    <input type="text" id="editProductName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDescription">Descrição:</label>
+                    <textarea id="editProductDescription" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">Preço (R$):</label>
+                    <input type="number" id="editProductPrice" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPhoto">URL da Imagem:</label>
+                    <input type="url" id="editProductPhoto" name="photo" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="cancelEditBtn" class="cancel-btn">Cancelar</button>
+                    <button type="submit" class="submit-btn">Confirmar</button>
+                    <button type="button" id="deleteProductBtn" class="delete-btn">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir este produto?</p>
+            <div class="form-buttons">
+                <button type="button" id="cancelDeleteBtn" class="cancel-btn">Cancelar</button>
+                <button type="button" id="confirmDeleteBtn" class="delete-btn">Excluir</button>
+            </div>
         </div>
     </div>
 

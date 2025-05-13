@@ -224,6 +224,23 @@ app.delete('/products/:id', authenticate, authorizeAdmin, async (req, res) => {
     }
 });
 
+// Rota para listar todos os produtos (público ou autenticado, como preferir)
+app.get('/products', async (req, res) => {
+    try {
+        const snapshot = await db.ref('products').once('value');
+        const productsObj = snapshot.val() || {};
+        // Transforma o objeto em array e inclui o id
+        const products = Object.entries(productsObj).map(([id, prod]) => ({
+            id,
+            ...prod
+        }));
+        res.json({ products });
+    } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+        res.status(500).json({ error: 'Erro ao buscar produtos' });
+    }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Erro não tratado:', err.stack);

@@ -21,14 +21,17 @@ async function fetchAndRenderProducts(query = '') {
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
+                    <div class="product-image-wrapper">
+                        <img src="${product.photo || '../img/no-image.png'}" alt="Produto" class="product-image">
+                        <button class="edit-btn" data-id="${product.id}" title="Editar">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
                     <div class="product-info">
                         <h3>${product.name}</h3>
                         <p>${product.description || ''}</p>
-                        <span>R$ ${product.price}</span>
+                        <span class="product-price">R$ ${Number(product.price).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
                     </div>
-                    <button class="edit-btn" data-id="${product.id}" title="Editar">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
                 `;
                 container.appendChild(card);
             });
@@ -55,15 +58,6 @@ const createBtn = document.getElementById('createProductBtn');
 
 // Evento para editar produto
 const container = document.getElementById('productsContainer');
-if (container) {
-    container.addEventListener('click', (e) => {
-        if (e.target.closest('.edit-btn')) {
-            const id = e.target.closest('.edit-btn').dataset.id;
-            // Aqui você pode abrir um modal de edição ou redirecionar
-            alert('Função de editar produto ainda não implementada. ID: ' + id);
-        }
-    });
-}
 
 // Função de alternância de tema
 function setTheme(theme) {
@@ -160,3 +154,100 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Utilitário para abrir/fechar modais
+function showModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+}
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Variáveis para guardar o produto em edição/exclusão
+let editingProductId = null;
+
+// Abrir modal de edição ao clicar no lápis
+container.addEventListener('click', async (e) => {
+    if (e.target.closest('.edit-btn')) {
+        const id = e.target.closest('.edit-btn').dataset.id;
+        // Buscar dados do produto atual
+        const response = await fetch(`${API_URL}/products`, {
+            headers: {
+                'username': localStorage.getItem('username'),
+                'password': localStorage.getItem('password')
+            }
+        });
+        const data = await response.json();
+        const product = data.products.find(p => p.id === id);
+        if (!product) return alert('Produto não encontrado!');
+        editingProductId = id;
+        // Preencher campos do modal
+        document.getElementById('editProductName').value = product.name;
+        document.getElementById('editProductDescription').value = product.description;
+        document.getElementById('editProductPrice').value = product.price;
+        document.getElementById('editProductPhoto').value = product.photo;
+        showModal('editProductModal');
+    }
+});
+
+// Fechar modal de edição
+document.getElementById('cancelEditBtn').onclick = () => {
+    closeModal('editProductModal');
+    editingProductId = null;
+};
+
+// Salvar alterações (PUT)
+document.getElementById('editProductForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const productData = {
+        name: document.getElementById('editProductName').value,
+        description: document.getElementById('editProductDescription').value,
+        price: parseFloat(document.getElementById('editProductPrice').value),
+        photo: document.getElementById('editProductPhoto').value
+    };
+    try {
+        const response = await fetch(`${API_URL}/products/${editingProductId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(productData)
+        });
+        if (!response.ok) throw new Error('Erro ao atualizar produto');
+        closeModal('editProductModal');
+        fetchAndRenderProducts();
+        alert('Produto atualizado com sucesso!');
+    } catch (error) {
+        alert('Erro ao atualizar produto.');
+    }
+};
+
+// Abrir modal de confirmação de exclusão
+document.getElementById('deleteProductBtn').onclick = () => {
+    showModal('confirmDeleteModal');
+};
+
+// Cancelar exclusão
+document.getElementById('cancelDeleteBtn').onclick = () => {
+    closeModal('confirmDeleteModal');
+};
+
+// Confirmar exclusão (DELETE)
+document.getElementById('confirmDeleteBtn').onclick = async () => {
+    try {
+        const response = await fetch(`${API_URL}/products/${editingProductId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        });
+        if (!response.ok) throw new Error('Erro ao excluir produto');
+        closeModal('confirmDeleteModal');
+        closeModal('editProductModal');
+        fetchAndRenderProducts();
+        alert('Produto excluído com sucesso!');
+    } catch (error) {
+        alert('Erro ao excluir produto.');
+    }
+};
