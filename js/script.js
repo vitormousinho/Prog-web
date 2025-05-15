@@ -1,21 +1,4 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-const API_URL = process.env.API_URL || "http://localhost:3001";
+const API_URL = 'http://localhost:3001';
 
 // Função para obter o token de autenticação
 function getAuthToken() {
@@ -64,28 +47,267 @@ async function fetchProducts() {
     }
 }
 
-function displayProducts(products) {
-    const productsGrid = document.querySelector(".products-grid");
-    if (!productsGrid) return;
+// Função para buscar produtos em destaque (mais recentes)
+async function fetchFeaturedProducts() {
+    try {
+        const response = await fetch(`${API_URL}/products`);
+        const data = await response.json();
+        if (response.ok && Array.isArray(data.products)) {
+            // Ordena por data de edição (updatedAt) ou criação (createdAt), mais recentes primeiro
+            const sortedProducts = data.products.sort((a, b) => {
+                const dateA = new Date(a.updatedAt || a.createdAt || 0);
+                const dateB = new Date(b.updatedAt || b.createdAt || 0);
+                return dateB - dateA;
+            });
+            const featuredProducts = sortedProducts.slice(0, 4);
+            displayProducts(featuredProducts, 'featured-products');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar produtos em destaque:', error);
+    }
+}
 
-    productsGrid.innerHTML = ""; // Limpa os produtos existentes
+// Função para buscar produtos populares (melhor avaliados)
+async function fetchPopularProducts() {
+    try {
+        const response = await fetch(`${API_URL}/products`);
+        const data = await response.json();
+        if (response.ok && Array.isArray(data.products)) {
+            // Ordena por rate decrescente, depois por votes decrescente
+            const sortedProducts = data.products.sort((a, b) => {
+                const rateA = a.rate || 0;
+                const rateB = b.rate || 0;
+                const votesA = a.votes || 0;
+                const votesB = b.votes || 0;
+                if (rateB !== rateA) {
+                    return rateB - rateA;
+                } else {
+                    return votesB - votesA;
+                }
+            });
+            const popularProducts = sortedProducts.slice(0, 4);
+            displayProducts(popularProducts, 'popular-products');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar produtos populares:', error);
+    }
+}
+
+// Função para carregar favoritos do usuário
+async function loadFavorites() {
+    if (!isAuthenticated()) return [];
     
-    if (!products || products.length === 0) {
-        productsGrid.innerHTML = '<p class="no-products">Nenhum produto encontrado</p>';
+    try {
+        const response = await fetch(`${API_URL}/users/favorites`, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro ao carregar favoritos');
+        }
+        
+        const data = await response.json();
+        return data.favorites || [];
+    } catch (error) {
+        console.error('Erro ao carregar favoritos:', error);
+        return [];
+    }
+}
+
+// Função para atualizar contadores no header
+function updateHeaderCounters(favoritesCount, cartCount) {
+    const favoritesCounter = document.querySelector('.wishlist .counter');
+    const cartCounter = document.querySelector('.cart .counter');
+    
+    if (favoritesCounter) {
+        favoritesCounter.textContent = favoritesCount;
+    }
+    if (cartCounter) {
+        cartCounter.textContent = cartCount;
+    }
+}
+
+// Função para carregar carrinho do usuário
+async function loadCart() {
+    if (!isAuthenticated()) return [];
+    
+    try {
+        const response = await fetch(`${API_URL}/users/cart`, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro ao carregar carrinho');
+        }
+        
+        const data = await response.json();
+        return data.cart || [];
+    } catch (error) {
+        console.error('Erro ao carregar carrinho:', error);
+        return [];
+    }
+}
+
+// Função para alternar carrinho
+async function toggleCart(productId, button) {
+    if (!isAuthenticated()) {
+        showError('Faça login para adicionar produtos ao carrinho');
         return;
     }
 
-    products.forEach((product) => {
-        const productCard = `
-            <div class="product-card">
-                <img src="${product.photo || 'placeholder.jpg'}" alt="${product.name}" class="product-img">
-                <h3 class="product-title">${product.name}</h3>
-                <p class="product-price">R$ ${product.price.toFixed(2)}</p>
-                <p class="product-description">${product.description || ''}</p>
-                <button type="button" class="add-to-cart-btn" data-id="${product.id}">ADICIONAR AO CARRINHO</button>
+    try {
+        const response = await fetch(`${API_URL}/users/cart`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao atualizar carrinho');
+        }
+
+        const data = await response.json();
+        
+        if (button) {
+            if (data.isInCart) {
+                button.textContent = 'Retirar do carrinho';
+                button.classList.add('in-cart');
+            } else {
+                button.textContent = 'Adicionar ao carrinho';
+                button.classList.remove('in-cart');
+            }
+        }
+
+        // Atualiza contador do carrinho
+        const cart = await loadCart();
+        const favorites = await loadFavorites();
+        updateHeaderCounters(favorites.length, cart.length);
+    } catch (error) {
+        console.error('Erro ao atualizar carrinho:', error);
+        showError('Erro ao atualizar carrinho');
+    }
+}
+
+// Função para alternar favorito atualizada
+async function toggleFavorite(productId, button) {
+    if (!isAuthenticated()) {
+        showError('Faça login para favoritar produtos');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/users/favorites`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId })
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao atualizar favorito');
+        }
+
+        const data = await response.json();
+        if (button) {
+            const icon = button.querySelector('i');
+            if (data.isFavorite) {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fas');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('fa-regular');
+            }
+        }
+        // Atualiza contador de favoritos
+        const favorites = await loadFavorites();
+        const cart = await loadCart();
+        updateHeaderCounters(favorites.length, cart.length);
+    } catch (error) {
+        console.error('Erro ao atualizar favorito:', error);
+        showError('Erro ao atualizar favorito');
+    }
+}
+
+// Função para exibir produtos atualizada
+async function displayProducts(products, sectionId) {
+    const container = document.getElementById(sectionId);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    if (!products || products.length === 0) {
+        container.innerHTML = '<p class="no-products">Nenhum produto encontrado</p>';
+        return;
+    }
+
+    // Carrega favoritos e carrinho do usuário
+    const favorites = await loadFavorites();
+    const cart = await loadCart();
+
+    // Atualiza contadores no header
+    updateHeaderCounters(favorites.length, cart.length);
+
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        const precoOriginal = Number(product.price);
+        const precoComDesconto = product.desconto ? precoOriginal * (1 - product.desconto/100) : precoOriginal;
+        const stars = '★'.repeat(Math.floor(product.rate || 0)) + '☆'.repeat(5 - Math.floor(product.rate || 0));
+        
+        const isFavorite = favorites.includes(product.id);
+        const isInCart = cart.includes(product.id);
+        const heartIcon = isFavorite ? 'fas fa-heart' : 'fa-regular fa-heart';
+        const cartButtonText = isInCart ? 'Retirar do carrinho' : 'Adicionar ao carrinho';
+        const cartButtonClass = isInCart ? 'add-to-cart-btn in-cart' : 'add-to-cart-btn';
+        
+        card.innerHTML = `
+            <div class="product-image-area">
+                <button class="favorite-btn" data-id="${product.id}" title="Favoritar">
+                    <i class="${heartIcon}"></i>
+                </button>
+                <img src="${product.photo || '../img/no-image.png'}" alt="${product.name}" class="product-img">
             </div>
+            <div class="product-info-area">
+                <h3 class="product-title">${product.name}</h3>
+                <div class="product-rating">
+                    <span class="stars">${stars}</span>
+                    <span class="votes">(${product.votes || 0} votos)</span>
+                </div>
+                <div class="product-price-row">
+                    ${product.desconto ? `<span class="original-price">R$ ${precoOriginal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>` : ''}
+                    ${product.desconto ? `<span class="discount-badge">-${product.desconto}%</span>` : ''}
+                </div>
+                <div class="product-price-row">
+                    <span class="current-price">R$ ${precoComDesconto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+            </div>
+            <button type="button" class="${cartButtonClass}" data-id="${product.id}">${cartButtonText}</button>
         `;
-        productsGrid.innerHTML += productCard;
+        
+        // Adiciona eventos de clique
+        const favoriteBtn = card.querySelector('.favorite-btn');
+        favoriteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleFavorite(product.id, favoriteBtn);
+        });
+
+        const cartBtn = card.querySelector('.add-to-cart-btn');
+        cartBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleCart(product.id, cartBtn);
+        });
+        
+        container.appendChild(card);
     });
 }
 
@@ -152,9 +374,314 @@ document.getElementById("add-product-form")?.addEventListener("submit", async (e
     }
 });
 
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    if (checkAuth()) {
-        fetchProducts();
+// Função para alternar o tema
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.querySelector('#theme-toggle i');
+    const isDark = body.classList.contains('dark-theme');
+    
+    body.classList.toggle('dark-theme');
+    body.classList.toggle('light-theme');
+    
+    if (isDark) {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'light');
+    } else {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'dark');
     }
+}
+
+// Função para carregar o tema salvo
+function loadSavedTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const body = document.body;
+    const themeIcon = document.querySelector('#theme-toggle i');
+    
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+        body.classList.remove('light-theme');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+    } else {
+        body.classList.add('light-theme');
+        body.classList.remove('dark-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado');
+    
+    // Configuração do tema
+    loadSavedTheme();
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Carrega os produtos
+    fetchFeaturedProducts();
+    fetchPopularProducts();
+
+    // Adiciona evento para os links do main-menu
+    const mainMenuButtons = document.querySelectorAll('.main-menu a');
+    mainMenuButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const category = button.getAttribute('data-category');
+            showFilteredSection(category);
+        });
+    });
 });
+
+// Abrir/fechar menus laterais
+function openSidebar(type) {
+    closeSidebar(type === 'favorites' ? 'cart' : 'favorites');
+    document.getElementById(type + '-sidebar').classList.add('open');
+    if (type === 'favorites') renderFavoritesSidebar();
+    if (type === 'cart') renderCartSidebar();
+}
+function closeSidebar(type) {
+    document.getElementById(type + '-sidebar').classList.remove('open');
+}
+
+// Botões do header
+document.querySelector('.wishlist')?.addEventListener('click', e => {
+    e.preventDefault();
+    openSidebar('favorites');
+});
+document.querySelector('.cart')?.addEventListener('click', e => {
+    e.preventDefault();
+    openSidebar('cart');
+});
+
+// Renderizar favoritos no menu lateral
+async function renderFavoritesSidebar() {
+    const favoritesList = document.getElementById('favorites-list');
+    favoritesList.innerHTML = '<p>Carregando...</p>';
+    const favorites = await loadFavorites();
+    const allProducts = await fetchAllProducts();
+    const cart = await loadCart();
+
+    if (!favorites.length) {
+        favoritesList.innerHTML = '<p>Nenhum favorito.</p>';
+        return;
+    }
+
+    favoritesList.innerHTML = '';
+    favorites.forEach(id => {
+        const product = allProducts.find(p => p.id === id);
+        if (!product) return;
+        const isInCart = cart.includes(product.id);
+        const stars = '★'.repeat(Math.floor(product.rate || 0)) + '☆'.repeat(5 - Math.floor(product.rate || 0));
+        const div = document.createElement('div');
+        div.className = 'sidebar-product';
+        div.innerHTML = `
+            <img src="${product.photo || '../img/no-image.png'}" alt="${product.name}">
+            <div class="sidebar-product-info">
+                <div class="sidebar-product-title">${product.name}</div>
+                <div class="sidebar-product-rating">${stars}</div>
+                <div class="sidebar-product-price">R$ ${Number(product.price).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                <div class="sidebar-product-actions">
+                    <button class="add-cart">${isInCart ? 'Retirar do carrinho' : 'Adicionar ao carrinho'}</button>
+                    <button class="remove-favorite">Remover</button>
+                </div>
+            </div>
+        `;
+        // Eventos
+        div.querySelector('.add-cart').onclick = () => toggleCart(product.id, div.querySelector('.add-cart'));
+        div.querySelector('.remove-favorite').onclick = async () => {
+            // Remove dos favoritos
+            await toggleFavorite(product.id, null);
+            // Atualiza o menu lateral de favoritos
+            renderFavoritesSidebar();
+            // Atualiza todos os corações dos cards principais
+            updateAllFavoriteIcons();
+        };
+        favoritesList.appendChild(div);
+    });
+}
+
+// Renderizar carrinho no menu lateral
+async function renderCartSidebar() {
+    const cartList = document.getElementById('cart-list');
+    const cartSummary = document.getElementById('cart-summary');
+    cartList.innerHTML = '<p>Carregando...</p>';
+    cartSummary.innerHTML = '';
+    const cart = await loadCart();
+    const allProducts = await fetchAllProducts();
+
+    if (!cart.length) {
+        cartList.innerHTML = '<p>Carrinho vazio.</p>';
+        cartSummary.innerHTML = '';
+        return;
+    }
+
+    cartList.innerHTML = '';
+    let total = 0, totalDesconto = 0, totalFinal = 0;
+    cart.forEach(id => {
+        const product = allProducts.find(p => p.id === id);
+        if (!product) return;
+        const precoOriginal = Number(product.price);
+        const precoComDesconto = product.desconto ? precoOriginal * (1 - product.desconto/100) : precoOriginal;
+        const desconto = product.desconto ? precoOriginal - precoComDesconto : 0;
+        total += precoOriginal;
+        totalDesconto += desconto;
+        totalFinal += precoComDesconto;
+        const stars = '★'.repeat(Math.floor(product.rate || 0)) + '☆'.repeat(5 - Math.floor(product.rate || 0));
+        const div = document.createElement('div');
+        div.className = 'sidebar-product';
+        div.innerHTML = `
+            <img src="${product.photo || '../img/no-image.png'}" alt="${product.name}">
+            <div class="sidebar-product-info">
+                <div class="sidebar-product-title">${product.name}</div>
+                <div class="sidebar-product-rating">${stars}</div>
+                <div class="sidebar-product-price">R$ ${precoComDesconto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                <div class="sidebar-product-actions">
+                    <button class="remove-cart">Remover do carrinho</button>
+                </div>
+            </div>
+        `;
+        div.querySelector('.remove-cart').onclick = async () => {
+            await toggleCart(product.id, null);
+            renderCartSidebar();
+            updateAllCartButtons();
+        };
+        cartList.appendChild(div);
+    });
+
+    cartSummary.innerHTML = `
+        <div class="cart-summary-row"><span>Total sem desconto:</span><span>R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span></div>
+        <div class="cart-summary-row"><span>Total de desconto:</span><span>- R$ ${totalDesconto.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span></div>
+        <div class="cart-summary-total"><span>Total final:</span> <span>R$ ${totalFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span></div>
+        <button class="confirm-purchase-btn">Confirmar compra</button>
+    `;
+    cartSummary.querySelector('.confirm-purchase-btn').onclick = async () => {
+        alert('Compra confirmada! (implemente a lógica de compra aqui)');
+        await clearCart();
+        renderCartSidebar();
+        // Atualiza contadores no header
+        const favorites = await loadFavorites();
+        const cart = await loadCart();
+        updateHeaderCounters(favorites.length, cart.length);
+        // Atualiza todos os botões de carrinho nos cards principais
+        updateAllCartButtons();
+    };
+}
+
+// Função para buscar todos os produtos (auxiliar para os menus laterais)
+async function fetchAllProducts() {
+    const response = await fetch(`${API_URL}/products`);
+    const data = await response.json();
+    return data.products || [];
+}
+
+async function clearCart() {
+    if (!isAuthenticated()) return;
+    try {
+        await fetch(`${API_URL}/users/cart/clear`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error('Erro ao esvaziar carrinho:', error);
+    }
+}
+
+async function updateAllFavoriteIcons() {
+    const favorites = await loadFavorites();
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        const productId = btn.getAttribute('data-id');
+        const icon = btn.querySelector('i');
+        if (favorites.includes(productId)) {
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fas');
+        } else {
+            icon.classList.remove('fas');
+            icon.classList.add('fa-regular');
+        }
+    });
+    // Atualiza o contador no header
+    const cart = await loadCart();
+    updateHeaderCounters(favorites.length, cart.length);
+}
+
+async function updateAllCartButtons() {
+    const cart = await loadCart();
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        const productId = btn.getAttribute('data-id');
+        if (cart.includes(productId)) {
+            btn.textContent = 'Retirar do carrinho';
+            btn.classList.add('in-cart');
+        } else {
+            btn.textContent = 'Adicionar ao carrinho';
+            btn.classList.remove('in-cart');
+        }
+    });
+    // Atualiza o contador no header
+    const favorites = await loadFavorites();
+    updateHeaderCounters(favorites.length, cart.length);
+}
+
+// Função para filtrar produtos por categoria
+async function filterProductsByCategory(category, containerId = 'featured-products') {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    try {
+        const response = await fetch(`${API_URL}/products`);
+        const data = await response.json();
+        if (response.ok && Array.isArray(data.products)) {
+            let products = data.products;
+            // Mapeamento de categorias para tags
+            const categoryToTag = {
+                'promocoes': '#PROMOÇÕES',
+                'pc-gamer': '#PC GAMER',
+                'kit-upgrade': '#KIT UPGRADE',
+                'hardware': '#HARDWARE',
+                'notebooks': '#NOTEBOOKS',
+                'monitores': '#MONITORES',
+                'perifericos': '#PERIFÉRICOS',
+                'cadeiras': '#CADEIRAS',
+                'redes': '#REDES'
+            };
+            // Filtrar produtos pela tag correspondente à categoria
+            const tagToFilter = categoryToTag[category];
+            if (tagToFilter) {
+                products = products.filter(p => p.tags && p.tags.includes(tagToFilter));
+            }
+            if (products.length === 0) {
+                container.innerHTML = '<p class="no-results">Nenhum produto encontrado nesta categoria.</p>';
+                return;
+            }
+            displayProducts(products, containerId);
+        } else {
+            container.innerHTML = '<p>Nenhum produto encontrado.</p>';
+        }
+    } catch (error) {
+        container.innerHTML = '<p>Erro ao carregar produtos.</p>';
+    }
+}
+
+function showFilteredSection(category) {
+    // Esconde todas as seções principais
+    document.querySelector('.banner').style.display = 'none';
+    document.querySelector('.featured-section').style.display = 'none';
+    document.querySelector('.categories-section').style.display = 'none';
+    document.querySelector('.promo-banners').style.display = 'none';
+    document.querySelectorAll('.featured-section').forEach(sec => sec.style.display = 'none');
+    document.querySelector('.newsletter').style.display = 'none';
+
+    // Mostra a seção filtrada
+    document.getElementById('filtered-section').style.display = 'block';
+
+    // Filtra e exibe os produtos
+    filterProductsByCategory(category, 'filtered-products');
+}

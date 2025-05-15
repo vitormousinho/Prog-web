@@ -89,23 +89,64 @@
     <!-- Modal de Criação de Produto -->
     <div id="createProductModal" class="modal">
         <div class="modal-content">
-            <h2>Criar Novo Produto</h2>
+            <h2>Adicionar Novo Produto</h2>
             <form id="createProductForm">
                 <div class="form-group">
-                    <label for="productName">Nome do Produto:</label>
-                    <input type="text" id="productName" name="name" required>
+                    <label for="name">Nome do Produto:</label>
+                    <input type="text" id="name" name="name" required>
                 </div>
                 <div class="form-group">
-                    <label for="productDescription">Descrição:</label>
-                    <textarea id="productDescription" name="description" required></textarea>
+                    <label for="description">Descrição:</label>
+                    <textarea id="description" name="description" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="productPrice">Preço (R$):</label>
-                    <input type="number" id="productPrice" name="price" step="0.01" required>
+                    <label for="price">Preço:</label>
+                    <input type="number" id="price" name="price" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="productPhoto">URL da Imagem:</label>
-                    <input type="url" id="productPhoto" name="photo" required>
+                    <label for="photo">URL da Foto:</label>
+                    <input type="url" id="photo" name="photo">
+                </div>
+                <div class="form-group">
+                    <label>Tags:</label>
+                    <div class="tags-checkbox-group">
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-promocoes" name="tags" value="#PROMOÇÕES">
+                            <label for="tag-promocoes">#PROMOÇÕES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-pc-gamer" name="tags" value="#PC GAMER">
+                            <label for="tag-pc-gamer">#PC GAMER</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-kit-upgrade" name="tags" value="#KIT UPGRADE">
+                            <label for="tag-kit-upgrade">#KIT UPGRADE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-hardware" name="tags" value="#HARDWARE">
+                            <label for="tag-hardware">#HARDWARE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-notebooks" name="tags" value="#NOTEBOOKS">
+                            <label for="tag-notebooks">#NOTEBOOKS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-monitores" name="tags" value="#MONITORES">
+                            <label for="tag-monitores">#MONITORES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-perifericos" name="tags" value="#PERIFÉRICOS">
+                            <label for="tag-perifericos">#PERIFÉRICOS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-cadeiras" name="tags" value="#CADEIRAS">
+                            <label for="tag-cadeiras">#CADEIRAS</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="desconto">Desconto (%):</label>
+                    <input type="number" id="desconto" name="desconto" min="0" max="100" step="1" value="0">
                 </div>
                 <div class="form-buttons">
                     <button type="button" id="cancelCreateBtn" class="cancel-btn">Cancelar</button>
@@ -122,24 +163,65 @@
             <form id="editProductForm">
                 <div class="form-group">
                     <label for="editProductName">Nome do Produto:</label>
-                    <input type="text" id="editProductName" name="name" required>
+                    <input type="text" id="editProductName" required>
                 </div>
                 <div class="form-group">
                     <label for="editProductDescription">Descrição:</label>
-                    <textarea id="editProductDescription" name="description" required></textarea>
+                    <textarea id="editProductDescription" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="editProductPrice">Preço (R$):</label>
-                    <input type="number" id="editProductPrice" name="price" step="0.01" required>
+                    <label for="editProductPrice">Preço:</label>
+                    <input type="number" id="editProductPrice" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="editProductPhoto">URL da Imagem:</label>
-                    <input type="url" id="editProductPhoto" name="photo" required>
+                    <label for="editProductPhoto">URL da Foto:</label>
+                    <input type="url" id="editProductPhoto">
+                </div>
+                <div class="form-group">
+                    <label>Tags:</label>
+                    <div class="tags-checkbox-group">
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-promocoes" name="edit-tags" value="#PROMOÇÕES">
+                            <label for="edit-tag-promocoes">#PROMOÇÕES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-pc-gamer" name="edit-tags" value="#PC GAMER">
+                            <label for="edit-tag-pc-gamer">#PC GAMER</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-kit-upgrade" name="edit-tags" value="#KIT UPGRADE">
+                            <label for="edit-tag-kit-upgrade">#KIT UPGRADE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-hardware" name="edit-tags" value="#HARDWARE">
+                            <label for="edit-tag-hardware">#HARDWARE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-notebooks" name="edit-tags" value="#NOTEBOOKS">
+                            <label for="edit-tag-notebooks">#NOTEBOOKS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-monitores" name="edit-tags" value="#MONITORES">
+                            <label for="edit-tag-monitores">#MONITORES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-perifericos" name="edit-tags" value="#PERIFÉRICOS">
+                            <label for="edit-tag-perifericos">#PERIFÉRICOS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-cadeiras" name="edit-tags" value="#CADEIRAS">
+                            <label for="edit-tag-cadeiras">#CADEIRAS</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDesconto">Desconto (%):</label>
+                    <input type="number" id="editProductDesconto" min="0" max="100" step="1" value="0">
                 </div>
                 <div class="form-buttons">
                     <button type="button" id="cancelEditBtn" class="cancel-btn">Cancelar</button>
-                    <button type="submit" class="submit-btn">Confirmar</button>
-                    <button type="button" id="deleteProductBtn" class="delete-btn">Excluir</button>
+                    <button type="submit" class="submit-btn">Salvar Alterações</button>
+                    <button type="button" id="deleteProductBtn" class="delete-btn">Excluir Produto</button>
                 </div>
             </form>
         </div>
@@ -156,6 +238,79 @@
             </div>
         </div>
     </div>
+
+    <style>
+        /* Estilos para as tags */
+        .product-tags {
+            margin: 5px 0;
+        }
+        
+        .product-tag {
+            display: inline-block;
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-right: 5px;
+            font-size: 0.8em;
+        }
+
+        /* Estilos para a avaliação */
+        .product-rating {
+            color: #ffd700;
+            margin: 5px 0;
+        }
+
+        /* Estilos para preços e desconto */
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .current-price {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .discount-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        /* Estilos para os checkboxes de tags */
+        .tags-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .tag-checkbox label {
+            margin: 0;
+            font-weight: normal;
+        }
+    </style>
 
     <script src="../js/userState.js"></script>
     <script src="../js/indexAdmin.js"></script>

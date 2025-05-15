@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="light-theme">
     <header>
         <div class="container">
             <div class="top-header">
@@ -43,7 +43,7 @@
                         <span class="counter">0</span>
                     </div>
                     <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
-                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
                     </button>
                 </div>
             </div>
@@ -69,14 +69,14 @@
                     </ul>
                 </div>
                 <ul class="main-menu">
-                    <li><a href="#">PROMOÇÕES</a></li>
-                    <li><a href="#">PC GAMER</a></li>
-                    <li><a href="#">KIT UPGRADE</a></li>
-                    <li><a href="#">HARDWARE</a></li>
-                    <li><a href="#">NOTEBOOKS</a></li>
-                    <li><a href="#">MONITORES</a></li>
-                    <li><a href="#">MONTE SEU PC</a></li>
-                    <li><a href="#">ATENDIMENTO</a></li>
+                    <li><a href="#" data-category="promocoes">PROMOÇÕES</a></li>
+                    <li><a href="#" data-category="pc-gamer">PC GAMER</a></li>
+                    <li><a href="#" data-category="kit-upgrade">KIT UPGRADE</a></li>
+                    <li><a href="#" data-category="hardware">HARDWARE</a></li>
+                    <li><a href="#" data-category="notebooks">NOTEBOOKS</a></li>
+                    <li><a href="#" data-category="monitores">MONITORES</a></li>
+                    <li><a href="#" data-category="perifericos">PERIFÉRICOS</a></li>
+                    <li><a href="#" data-category="cadeiras">CADEIRAS</a></li>
                 </ul>
             </div>
         </div>
@@ -88,31 +88,8 @@
             </section>
             <section class="featured-section">
                 <h2 class="section-title">Produtos em Destaque</h2>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <img src="img/product1.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">PC Gamer AMD Ryzen 5 5600G</h3>
-                        <p class="product-price">R$ 2.999,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="img/product2.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">Monitor Gamer 24" 144Hz</h3>
-                        <p class="product-price">R$ 1.299,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="img/product3.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">Placa de Vídeo RTX 3060 8GB</h3>
-                        <p class="product-price">R$ 2.499,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="img/product4.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">Notebook Gamer i5 11400F</h3>
-                        <p class="product-price">R$ 4.599,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
+                <div class="products-grid" id="featured-products">
+                    <!-- Produtos serão carregados dinamicamente -->
                 </div>
             </section>
             <section class="categories-section">
@@ -166,31 +143,8 @@
             </section>
             <section class="featured-section">
                 <h2 class="section-title">Produtos Populares</h2>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <img src="img/product5.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">Headset Gamer 7.1 RGB</h3>
-                        <p class="product-price">R$ 299,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="img/product6.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">SSD 1TB NVMe</h3>
-                        <p class="product-price">R$ 599,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="img/product7.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">Mouse Gamer 16000 DPI</h3>
-                        <p class="product-price">R$ 199,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
-                    <div class="product-card">
-                        <img src="img/product8.jpg" alt="Produto" class="product-img">
-                        <h3 class="product-title">Teclado Mecânico RGB</h3>
-                        <p class="product-price">R$ 349,99</p>
-                        <button type="button" class="add-to-cart-btn">ADICIONAR AO CARRINHO</button>
-                    </div>
+                <div class="products-grid" id="popular-products">
+                    <!-- Produtos serão carregados dinamicamente -->
                 </div>
             </section>
             <section class="newsletter">
@@ -200,6 +154,10 @@
                     <input type="email" placeholder="Seu melhor e-mail" required>
                     <button type="submit">INSCREVER</button>
                 </form>
+            </section>
+            <section id="filtered-section" style="display:none;">
+                <h2 class="section-title">Produtos</h2>
+                <div class="products-grid" id="filtered-products"></div>
             </section>
         </div>
     </main>
@@ -265,39 +223,28 @@
         </div>
     </footer>
     
+
+    <!-- Menu Lateral de Favoritos -->
+    <aside id="favorites-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Favoritos</h3>
+            <button class="close-sidebar" onclick="closeSidebar('favorites')">&times;</button>
+        </div>
+        <div class="sidebar-content" id="favorites-list"></div>
+    </aside>
+
+    <!-- Menu Lateral do Carrinho -->
+    <aside id="cart-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Carrinho</h3>
+            <button class="close-sidebar" onclick="closeSidebar('cart')">&times;</button>
+        </div>
+        <div class="sidebar-content" id="cart-list"></div>
+        <div class="cart-summary" id="cart-summary"></div>
+    </aside>
+    
     <!-- JavaScript Link -->
     <script src="../js/userState.js"></script>
     <script src="../js/script.js"></script>
-    <script>
-        // Função para alternar o tema
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = themeToggle.querySelector('i');
-            
-            // Verifica se há um tema salvo
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-            
-            // Adiciona o evento de clique para alternar o tema
-            themeToggle.addEventListener('click', function() {
-                document.body.classList.toggle('dark-theme');
-                
-                // Atualiza o ícone
-                if (document.body.classList.contains('dark-theme')) {
-                    themeIcon.classList.remove('fa-sun');
-                    themeIcon.classList.add('fa-moon');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
