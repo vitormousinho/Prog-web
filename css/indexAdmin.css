@@ -11,22 +11,39 @@
     --card-bg: #ffffff;
     --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
     --success: #4caf50;
+    --transition-speed: 0.3s;
 }
 
+/* Tema Claro (padrão) */
 body {
     font-family: Arial, sans-serif;
-    background: var(--light-bg);
+    background-color: var(--light-bg);
     margin: 0;
     padding: 0;
     color: var(--text-dark);
-    transition: background 0.3s, color 0.3s;
+    transition: background-color var(--transition-speed),
+                color var(--transition-speed);
 }
 
+/* Tema Escuro (apenas quando a classe dark-theme está presente) */
 body.dark-theme {
     --light-bg: #181818;
     --card-bg: #232323;
     --text-dark: #f5f5f5;
     --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --border-color: #2a2a2a;
+    --hover-primary: #1a3a8f;
+    --hover-secondary: #f0b52e;
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+}
+
+/* Transições suaves para todos os elementos */
+* {
+    transition: background-color var(--transition-speed),
+                color var(--transition-speed),
+                border-color var(--transition-speed),
+                box-shadow var(--transition-speed);
 }
 
 .container {
@@ -52,12 +69,12 @@ body.dark-theme {
 }
 
 .logo img {
-    height: 50px;
+    height: 70px;
     margin-right: 15px;
 }
 
 .logo h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     margin: 0;
     color: var(--text-color);
@@ -397,9 +414,35 @@ body.dark-theme .product-info p {
 }
 
 /* Responsividade */
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
+    .container {
+        max-width: 95%;
+    }
+    
     .products-container {
-        justify-content: center;
+        gap: 16px;
+    }
+    
+    .product-card {
+        width: calc(33.333% - 16px);
+    }
+}
+
+@media (max-width: 992px) {
+    .admin-header {
+        padding: 12px 20px;
+    }
+    
+    .search-bar {
+        margin: 0 20px;
+    }
+    
+    .products-container {
+        padding: 20px;
+    }
+    
+    .product-card {
+        width: calc(50% - 16px);
     }
     
     .main-menu {
@@ -414,39 +457,94 @@ body.dark-theme .product-info p {
 @media (max-width: 768px) {
     .admin-header {
         flex-direction: column;
-        padding: 16px;
+        padding: 12px;
     }
     
     .logo-container {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
     }
     
     .search-bar {
-        margin: 16px 0;
+        margin: 12px 0;
         max-width: 100%;
     }
     
     .admin-actions {
         width: 100%;
         justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
     }
     
     .create-product-btn {
-        margin: 10px 0;
+        margin: 8px 0;
         width: 100%;
         justify-content: center;
     }
-}
-
-@media (max-width: 480px) {
-    .products-container {
-        padding: 16px;
-}
     
     .product-card {
         width: 100%;
     }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .logo img {
+        height: 60px;
+    }
+    
+    .logo h1 {
+        font-size: 22px;
+    }
 }
+
+@media (max-width: 480px) {
+    .admin-header {
+        padding: 10px;
+    }
+    
+    .logo img {
+        height: 50px;
+    }
+    
+    .logo h1 {
+        font-size: 20px;
+    }
+    
+    .search-bar input {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .theme-toggle {
+        font-size: 20px;
+    }
+    
+    .products-container {
+        padding: 12px;
+    }
+    
+    .product-info h3 {
+        font-size: 1rem;
+    }
+    
+    .product-info p {
+        font-size: 0.9rem;
+    }
+    
+    .product-price {
+        font-size: 1rem;
+    }
+    
+    .edit-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+}
+
 /* Estilos existentes */
 .container {
     max-width: 1200px;
@@ -730,4 +828,76 @@ body.dark-theme .form-buttons .submit-btn:hover {
 body.dark-theme .form-buttons .delete-btn {
     background-color: #b52a37;
     color: #fff;
+}
+
+/* Ajustes específicos para o tema escuro */
+body.dark-theme .search-bar input {
+    background-color: var(--card-bg);
+    color: var(--text-dark);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .search-bar button {
+    color: var(--text-dark);
+}
+
+body.dark-theme .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-dark);
+}
+
+body.dark-theme .form-group input,
+body.dark-theme .form-group textarea {
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .form-group label {
+    color: var(--text-dark);
+}
+
+body.dark-theme .tags-checkbox-group {
+    background-color: var(--light-bg);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .tag-checkbox label {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-dark);
+}
+
+body.dark-theme .user-dropdown {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .user-dropdown a {
+    color: var(--text-dark);
+}
+
+body.dark-theme .user-dropdown a:hover {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+/* Ajustes de acessibilidade para o tema escuro */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
+
+/* Removendo a detecção automática do tema escuro */
+@media (prefers-color-scheme: dark) {
+    body:not(.light-theme) {
+        /* Removendo a aplicação automática do tema escuro */
+    }
 } 
+
+@media (min-width: 768px) {
+    .departments-btn {
+        display: none;
+    }
+}

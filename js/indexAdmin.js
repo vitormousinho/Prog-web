@@ -1,9 +1,17 @@
 const API_URL = 'http://localhost:3001';
 
+let currentSearchToken = 0;
+let currentCategoryToken = 0;
+
 // Função para buscar e renderizar produtos
 async function fetchAndRenderProducts(query = '') {
     const container = document.getElementById('productsContainer');
     container.innerHTML = '';
+
+    // Controle de token para evitar duplicação
+    currentSearchToken++;
+    const thisSearchToken = currentSearchToken;
+
     try {
         const response = await fetch(`${API_URL}/products`, {
             headers: {
@@ -25,9 +33,15 @@ async function fetchAndRenderProducts(query = '') {
             }
             
             if (products.length === 0) {
-                container.innerHTML = '<p class="no-results">Nenhum produto encontrado.</p>';
+                // Só mostra se for a busca mais recente
+                if (thisSearchToken === currentSearchToken) {
+                    container.innerHTML = '<p class="no-results">Nenhum produto encontrado.</p>';
+                }
                 return;
             }
+
+            // Só mostra se for a busca mais recente
+            if (thisSearchToken !== currentSearchToken) return;
 
             products.forEach(product => {
                 const card = document.createElement('div');
@@ -220,6 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Erro ao criar produto. Por favor, tente novamente.');
         }
     });
+
+    // Redireciona para indexAdmin.html ao clicar no logo
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.style.cursor = 'pointer';
+        logo.addEventListener('click', function() {
+            window.location.href = 'indexAdmin.html';
+        });
+    }
 });
 
 // Utilitário para abrir/fechar modais
@@ -340,6 +363,11 @@ document.getElementById('confirmDeleteBtn').onclick = async () => {
 async function filterProductsByCategory(category) {
     const container = document.getElementById('productsContainer');
     container.innerHTML = '';
+
+    // Controle de token para evitar duplicação
+    currentCategoryToken++;
+    const thisCategoryToken = currentCategoryToken;
+
     try {
         const response = await fetch(`${API_URL}/products`, {
             headers: {
@@ -373,7 +401,9 @@ async function filterProductsByCategory(category) {
             }
             
             if (products.length === 0) {
-                container.innerHTML = '<p class="no-results">Nenhum produto encontrado nesta categoria.</p>';
+                if (thisCategoryToken === currentCategoryToken) {
+                    container.innerHTML = '<p class="no-results">Nenhum produto encontrado nesta categoria.</p>';
+                }
                 return;
             }
 
