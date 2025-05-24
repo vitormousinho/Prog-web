@@ -41,7 +41,7 @@ function checkPageAccess() {
     
     // Se estiver tentando acessar página de admin sem ser admin
     if (currentPage.includes('admin') && !isUserAdmin()) {
-        window.location.href = 'index.html';
+        window.location.href = 'dashboard.html';
         return false;
     }
     
@@ -60,12 +60,12 @@ function updateUserInterface() {
 
         let adminPanelLink = '';
         if (isAdmin) {
-            if (currentPage.includes('indexAdmin.html')) {
+            if (currentPage.includes('dashboardAdmin.html')) {
                 // Está no painel admin, mostra "Painel do Usuário"
-                adminPanelLink = `<a href="index.html" id="switch-panel-link">Painel do Usuário</a>`;
-            } else if (currentPage.includes('index.html')) {
+                adminPanelLink = `<a href="dashboard.html" id="switch-panel-link">Painel do Usuário</a>`;
+            } else if (currentPage.includes('dashboard.html')) {
                 // Está no painel usuário, mostra "Painel Admin"
-                adminPanelLink = `<a href="indexAdmin.html" id="switch-panel-link">Painel Admin</a>`;
+                adminPanelLink = `<a href="dashboardAdmin.html" id="switch-panel-link">Painel Admin</a>`;
             }
         }
 

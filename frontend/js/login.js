@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Verifica se já está logado
     if (localStorage.getItem('token')) {
         const isAdmin = localStorage.getItem('isAdmin') === 'true';
-        window.location.href = isAdmin ? 'indexAdmin.html' : 'index.html';
+        window.location.href = isAdmin ? 'dashboardAdmin.html' : 'dashboard.html';
         return;
     }
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Redireciona após um breve delay
                 setTimeout(() => {
-                    window.location.href = data.user.isAdmin ? 'indexAdmin.html' : 'index.html';
+                    window.location.href = data.user.isAdmin ? 'dashboardAdmin.html' : 'dashboard.html';
                 }, 1000);
             } else {
                 // Erro no login

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Verifica se já está logado
     if (localStorage.getItem('token')) {
-        window.location.href = 'index.html';
+        window.location.href = 'dashboard.html';
         return;
     }
 

@@ -11,10 +11,10 @@
   "name": "prog-web",
   "version": "1.0.0",
   "description": "API REST com autenticação e autorização",
-  "main": "js/API.js",
+  "main": "API.js",
   "scripts": {
-    "start": "node js/API.js",
-    "dev": "nodemon js/API.js",
+    "start": "node API.js",
+    "dev": "nodemon API.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -452,12 +452,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Redireciona para index.html ao clicar no logo
+    // Redireciona para dashboard.html ao clicar no logo
     const logo = document.querySelector('.logo');
     if (logo) {
         logo.style.cursor = 'pointer';
         logo.addEventListener('click', function() {
-            window.location.href = 'index.html';
+            window.location.href = 'dashboard.html';
         });
     }
 

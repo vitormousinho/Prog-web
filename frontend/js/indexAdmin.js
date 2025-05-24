@@ -235,12 +235,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Redireciona para indexAdmin.html ao clicar no logo
+    // Redireciona para dashboardAdmin.html ao clicar no logo
     const logo = document.querySelector('.logo');
     if (logo) {
         logo.style.cursor = 'pointer';
         logo.addEventListener('click', function() {
-            window.location.href = 'indexAdmin.html';
+            window.location.href = 'dashboardAdmin.html';
         });
     }
 });
