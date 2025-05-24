@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Recanto do Zé</title>
+    <link rel="stylesheet" href="../css/indexAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="admin-header">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="../img/Logo.png" alt="Recanto do Zé Logo">
+                    <h1>Painel Administrativo</h1>
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Pesquisar produtos..." id="search-input">
+                <button type="button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="admin-actions">
+                <div class="user-menu">
+                    <a href="#" class="user-link">
+                        <i class="fas fa-user"></i>
+                        <span id="user-name">Carregando...</span>
+                    </a>
+                    <div class="user-dropdown">
+                        <a href="#" id="logout-btn">Sair</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <nav>
+        <div class="container">
+            <div class="main-nav">
+                <div class="departments-btn" id="departments-toggle">
+                    <i class="fas fa-bars"></i>
+                    <span>CATEGORIAS</span>
+                </div>
+                <div class="departments-menu" id="departments-menu">
+                    <ul>
+                        <li><a href="#" data-category="pc-gamer">PC GAMER</a></li>
+                        <li><a href="#" data-category="kit-upgrade">KIT UPGRADE</a></li>
+                        <li><a href="#" data-category="hardware">HARDWARE</a></li>
+                        <li><a href="#" data-category="notebooks">NOTEBOOKS</a></li>
+                        <li><a href="#" data-category="monitores">MONITORES</a></li>
+                        <li><a href="#" data-category="perifericos">PERIFÉRICOS</a></li>
+                        <li><a href="#" data-category="cadeiras">CADEIRAS</a></li>
+                        <li><a href="#" data-category="redes">REDES</a></li>
+                    </ul>
+                </div>
+                <ul class="main-menu">
+                    <li><a href="#" data-category="promocoes">PROMOÇÕES</a></li>
+                    <li><a href="#" data-category="pc-gamer">PC GAMER</a></li>
+                    <li><a href="#" data-category="kit-upgrade">KIT UPGRADE</a></li>
+                    <li><a href="#" data-category="hardware">HARDWARE</a></li>
+                    <li><a href="#" data-category="notebooks">NOTEBOOKS</a></li>
+                    <li><a href="#" data-category="monitores">MONITORES</a></li>
+                    <li><a href="#" data-category="perifericos">PERIFÉRICOS</a></li>
+                    <li><a href="#" data-category="cadeiras">CADEIRAS</a></li>
+                </ul>
+                <button id="createProductBtn" class="create-product-btn">
+                    <i class="fas fa-plus"></i>
+                    CADASTRAR PRODUTO
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div class="container">
+            <div class="admin-products-title">
+                <h2>Produtos</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="products-container" id="productsContainer">
+                <!-- Os produtos serão carregados dinamicamente aqui -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Criação de Produto -->
+    <div id="createProductModal" class="modal">
+        <div class="modal-content">
+            <h2>Adicionar Novo Produto</h2>
+            <form id="createProductForm">
+                <div class="form-group">
+                    <label for="name">Nome do Produto:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Descrição:</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Preço:</label>
+                    <input type="number" id="price" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="photo">URL da Foto:</label>
+                    <input type="url" id="photo" name="photo">
+                </div>
+                <div class="form-group">
+                    <label>Tags:</label>
+                    <div class="tags-checkbox-group">
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-promocoes" name="tags" value="#PROMOÇÕES">
+                            <label for="tag-promocoes">#PROMOÇÕES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-pc-gamer" name="tags" value="#PC GAMER">
+                            <label for="tag-pc-gamer">#PC GAMER</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-kit-upgrade" name="tags" value="#KIT UPGRADE">
+                            <label for="tag-kit-upgrade">#KIT UPGRADE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-hardware" name="tags" value="#HARDWARE">
+                            <label for="tag-hardware">#HARDWARE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-notebooks" name="tags" value="#NOTEBOOKS">
+                            <label for="tag-notebooks">#NOTEBOOKS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-monitores" name="tags" value="#MONITORES">
+                            <label for="tag-monitores">#MONITORES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-perifericos" name="tags" value="#PERIFÉRICOS">
+                            <label for="tag-perifericos">#PERIFÉRICOS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="tag-cadeiras" name="tags" value="#CADEIRAS">
+                            <label for="tag-cadeiras">#CADEIRAS</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="desconto">Desconto (%):</label>
+                    <input type="number" id="desconto" name="desconto" min="0" max="100" step="1" value="0">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="cancelCreateBtn" class="cancel-btn">Cancelar</button>
+                    <button type="submit" class="submit-btn">Criar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Produto -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content">
+            <h2>Editar Produto</h2>
+            <form id="editProductForm">
+                <div class="form-group">
+                    <label for="editProductName">Nome do Produto:</label>
+                    <input type="text" id="editProductName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDescription">Descrição:</label>
+                    <textarea id="editProductDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">Preço:</label>
+                    <input type="number" id="editProductPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPhoto">URL da Foto:</label>
+                    <input type="url" id="editProductPhoto">
+                </div>
+                <div class="form-group">
+                    <label>Tags:</label>
+                    <div class="tags-checkbox-group">
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-promocoes" name="edit-tags" value="#PROMOÇÕES">
+                            <label for="edit-tag-promocoes">#PROMOÇÕES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-pc-gamer" name="edit-tags" value="#PC GAMER">
+                            <label for="edit-tag-pc-gamer">#PC GAMER</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-kit-upgrade" name="edit-tags" value="#KIT UPGRADE">
+                            <label for="edit-tag-kit-upgrade">#KIT UPGRADE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-hardware" name="edit-tags" value="#HARDWARE">
+                            <label for="edit-tag-hardware">#HARDWARE</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-notebooks" name="edit-tags" value="#NOTEBOOKS">
+                            <label for="edit-tag-notebooks">#NOTEBOOKS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-monitores" name="edit-tags" value="#MONITORES">
+                            <label for="edit-tag-monitores">#MONITORES</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-perifericos" name="edit-tags" value="#PERIFÉRICOS">
+                            <label for="edit-tag-perifericos">#PERIFÉRICOS</label>
+                        </div>
+                        <div class="tag-checkbox">
+                            <input type="checkbox" id="edit-tag-cadeiras" name="edit-tags" value="#CADEIRAS">
+                            <label for="edit-tag-cadeiras">#CADEIRAS</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDesconto">Desconto (%):</label>
+                    <input type="number" id="editProductDesconto" min="0" max="100" step="1" value="0">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="cancelEditBtn" class="cancel-btn">Cancelar</button>
+                    <button type="submit" class="submit-btn">Salvar Alterações</button>
+                    <button type="button" id="deleteProductBtn" class="delete-btn">Excluir Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir este produto?</p>
+            <div class="form-buttons">
+                <button type="button" id="cancelDeleteBtn" class="cancel-btn">Cancelar</button>
+                <button type="button" id="confirmDeleteBtn" class="delete-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos para as tags */
+        .product-tags {
+            margin: 5px 0;
+        }
+        
+        .product-tag {
+            display: inline-block;
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-right: 5px;
+            font-size: 0.8em;
+        }
+
+        /* Estilos para a avaliação */
+        .product-rating {
+            color: #ffd700;
+            margin: 5px 0;
+        }
+
+        /* Estilos para preços e desconto */
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .current-price {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .discount-badge {
+            background-color: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        /* Estilos para os checkboxes de tags */
+        .tags-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .tag-checkbox label {
+            margin: 0;
+            font-weight: normal;
+        }
+    </style>
+
+    <script src="../js/userState.js"></script>
+    <script src="../js/indexAdmin.js"></script>
+</body>
+</html> 
